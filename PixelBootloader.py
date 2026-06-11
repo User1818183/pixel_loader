@@ -51,13 +51,15 @@ def resolve_func_table(offset):
 	output_csv = open("func_csv", "w")
 	while address_table_start < address_table_end:
     	# get function offset
-		func_offset = ida_bytes.get_bytes(address_table_start, 8)
+		func_offset_addr = int(address_table_start)
+		func_offset = ida_bytes.get_bytes(func_offset_addr, 8)
 
     	# read function address
 		func_offset_bytes = int.from_bytes(func_offset, "little")
 
     	# read offset value of  "function name"
-		string_offset = ida_bytes.get_bytes(address_table_start+12, 4)
+		string_offset_addr = int(address_table_start + 12)
+		string_offset = ida_bytes.get_bytes(string_offset_addr, 4)
 
     	# find function name (names offset + names table)
 		func_name_addr = int.from_bytes(string_offset, "little") + address_table_end
@@ -161,14 +163,16 @@ def find_func_table(filesize_):
 	func_table_offset = search_bytes(data_search_offset, filesize_, "FFFF0000F8800000")
 
 	if func_table_offset:
-		# reading size of functions table 
-		func_table_size = int.from_bytes(ida_bytes.get_bytes(func_table_offset - 0xC, 4) , "little")
+		# reading size of functions table
+		func_table_size_addr = int(func_table_offset - 0xC)
+		func_table_size = int.from_bytes(ida_bytes.get_bytes(func_table_size_addr, 4), "little")
 		
 		# calculating offset of table end 
 		func_table_end = func_table_offset + (func_table_size * 16)
 		
 		# read address where code segment ends
-		end_of_code_segment = int.from_bytes(ida_bytes.get_bytes(func_table_end - 0x10, 8) , "little")
+		end_of_code_segment_addr = int(func_table_end - 0x10)
+		end_of_code_segment = int.from_bytes(ida_bytes.get_bytes(end_of_code_segment_addr, 8), "little")
 		
 		print("# PixelAblLoader: Functions table at: \t", hex(func_table_offset))
 		print("# PixelAblLoader: offset of end of code: \t", hex(end_of_code_segment))
