@@ -149,6 +149,10 @@ def search_bytes(start_ea, end_ea, bytes_str):
 		print("# PixelAblLoader: search failed")
 		return False
 
+	# idaapi.bin_search returns a tuple (offset, size), extract the offset
+	if isinstance(offset_found, tuple):
+		offset_found = offset_found[0]
+
 	return offset_found
  
 # search for and return offset of function table, and offset where code segment ends
