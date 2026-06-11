@@ -164,16 +164,16 @@ def find_func_table(filesize_):
 
 	if func_table_offset:
 		# reading size of functions table
-		func_table_size_addr = int(func_table_offset - 0xC)
-		func_table_size_bytes = ida_bytes.get_bytes(func_table_size_addr, int(4))
+		func_table_size_addr = int(func_table_offset) - int(0xC)
+		func_table_size_bytes = ida_bytes.get_bytes(func_table_size_addr, 4)
 		func_table_size = int.from_bytes(func_table_size_bytes, "little")
 		
 		# calculating offset of table end 
-		func_table_end = int(func_table_offset + (func_table_size * 16))
+		func_table_end = int(func_table_offset) + int(func_table_size * 16)
 		
 		# read address where code segment ends
-		end_of_code_segment_addr = int(func_table_end - 0x10)
-		end_of_code_segment_bytes = ida_bytes.get_bytes(end_of_code_segment_addr, int(8))
+		end_of_code_segment_addr = int(func_table_end) - int(0x10)
+		end_of_code_segment_bytes = ida_bytes.get_bytes(end_of_code_segment_addr, 8)
 		end_of_code_segment = int.from_bytes(end_of_code_segment_bytes, "little")
 		
 		print("# PixelAblLoader: Functions table at: \t", hex(func_table_offset))
