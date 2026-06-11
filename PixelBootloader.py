@@ -138,8 +138,9 @@ def search_bytes(start_ea, end_ea, bytes_str):
 	#print("# PixelAblLoader: search start: \t", hex(start_ea))
 	#print("# PixelAblLoader: search end: \t", hex(end_ea))
 
-	str_pattern = idaapi.parse_binpat_str(mypattern, start_ea, bytes_str, 16, 0)
-	if str_pattern is None:
+	try:
+		result = ida_bytes.parse_binpat_str(mypattern, start_ea, bytes_str, 16)
+	except:
 		return False
 
 	offset_found = idaapi.bin_search(start_ea, end_ea, mypattern, idaapi.BIN_SEARCH_CASE)
